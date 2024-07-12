@@ -1,0 +1,199 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>HTML Calculator</title> 
+    <!-- For styling -->
+    <style> 
+        table { 
+            border-collapse: collapse;
+            margin: auto; 
+        } 
+        
+        input[type="button"] { 
+            width: 100%; 
+            padding: 20px; 
+            background-color: #3A4655; 
+            color: white; 
+            font-size: 24px; 
+            font-weight: bold; 
+            box-shadow: 0 8px 50px -7px black;
+            border: none; 
+            outline: none; 
+            
+        } 
+        
+        input[type="text"] { 
+            padding:20px;
+            width: 100%; 
+            font-size: 18px; 
+            font-weight: bold; 
+            box-sizing: border-box;
+            text-align: right;
+            background-color: #F2F2F2;
+            border: 2px solid #BDBDBD;
+           
+        } 
+    </style> 
+</head> 
+<body> 
+    <table id="calculator"> 
+        <tr> 
+            <td colspan="4"> 
+                <input type="text" id="result" readonly value="0"> 
+            </td> 
+            
+        </tr> 
+        <tr> 
+            <td><input type="button" value="c" onclick="cleartext()"></td> 
+            <td><input type="button" value="+/-" onclick="changeSign()" ></td> 
+            <td><input type="button" id="symbol" value="%" onclick="symbolevaluate('%')"></td> 
+            <td><input type="button" id="symbol" value="/" onclick="symbolevaluate('/')"></td> 
+ 
+        </tr> 
+        <tr> 
+            <td><input type="button" value="7" onclick="display('7')"></td> 
+            <td><input type="button" value="8" onclick="display('8')"></td> 
+            <td><input type="button" value="9" onclick="display('9')"></td> 
+            <td><input type="button" id="symbol" value="*" onclick="symbolevaluate('*')"></td>
+            
+        </tr> 
+        <tr> 
+            <td><input type="button" value="4" onclick="display('4')"></td> 
+            <td><input type="button" value="5" onclick="display('5')"></td> 
+            <td><input type="button" value="6" onclick="display('6')"></td> 
+            <td><input type="button" id="symbol" value="-" onclick="symbolevaluate('-')"></td> 
+            
+        </tr> 
+        <tr> 
+            <td><input type="button" value="1" onclick="display('1')"></td> 
+            <td><input type="button" value="2" onclick="display('2')"></td> 
+            <td><input type="button" value="3" onclick="display('3')"></td> 
+            <td><input type="button" id="symbol" value="+" onclick="symbolevaluate('+')"></td> 
+            
+        </tr> 
+        <tr> 
+            <td colspan="2"><input type="button" value="0" onclick="display('0')"></td> 
+            <td><input type="button" value="." onclick="display('.')"></td> 
+            <td><input type="button" id="symbol" value="=" onclick="symbolevaluate('=')"></td> 
+            
+        </tr> 
+    </table> 
+</body> 
+<script>
+    var flag=0,count=0;
+function display(value)
+{
+    
+    if(flag==1)
+    {
+        cleartext();
+        flag=0;
+    }
+   if ( document.getElementById("result").value==0)
+   {
+    document.getElementById("result").value=value;
+   }
+   else
+   {
+    document.getElementById("result").value+=value;
+   }
+}
+function symbolevaluate(value)
+{
+   let previous=document.getElementById("result").value;
+   
+    let tempString=previous.substring(0,previous.length-2);
+  
+    if(previous[previous.length-1]==" "&& isNaN(previous[previous.length-2]))
+    {
+    document.getElementById("result").value=tempString;
+    }
+    count++;
+    let temp;
+    if(count!=1)
+    {
+    let resultField=calculate();
+    if(flag==1&& value!='=')
+    {
+        cleartext();
+        flag=0;
+        
+    }
+    if(value!='=')
+    temp=resultField+" "+value+" ";
+else
+temp=resultField+" ";
+    document.getElementById("result").value=temp;
+    }
+    else
+    {
+        if(flag==1)
+    {
+        cleartext();
+        flag=0;
+    }
+    temp=" "+value+" ";
+    document.getElementById("result").value+=temp;
+    }
+}
+function cleartext()
+{
+    
+    document.getElementById("result").value="0";
+}
+function calculate()
+{
+    let temp=document.getElementById("result").value;
+    let key=temp.split(' ');
+    let result=parseFloat(key[0]);
+    let j=1;
+    while(j<key.length)
+    {
+    switch(key[j])
+    {
+        case '+':
+            result+=parseFloat(key[j+1]);
+            j=j+2;
+            break;
+        case '-':
+            result-=parseFloat(key[j+1]);
+            j=j+2;
+            break;
+        case '*':
+            result*=parseFloat(key[j+1]);
+            j=j+2;
+            break;
+        case '/':
+        result/=parseFloat(key[j+1]);
+        j=j+2;
+        break;
+        case '%':
+        result%=parseFloat(key[j+1]);
+        j=j+2;
+        break;
+        default:
+            j++;
+            
+    }
+    }
+   
+    flag=1;
+    count=1;
+    return result;
+}
+function changeSign()
+{
+    let temp = document.getElementById("result").value;
+    
+            if (temp != "" && temp != "0")
+             {
+                if (temp[0] === '-') {
+                    document.getElementById("result").value = temp.substring(1);
+                } else {
+                    document.getElementById("result").value = '-' + temp;
+                }
+            }
+}
+</script>
+</html> 
+
