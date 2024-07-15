@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0px;
+            padding: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="text"] {
+            width: calc(100% - 150px);
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            outline: none;
+            box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .input-container label.required::after {
+            content: '*';
+            color: red;
+            margin-left: 4px;
+            position: relative;
+            top: -5px;
+            left: -6px;
+        }
+
+        select {
+            width: calc(100% - 140px);
+            padding: 12px;
+            font-size: 16px;
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        .toggle-btn {
+            background-color: #a9ccf2;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 0;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-btn.selected {
+            background-color: #4b9df5;
+        }
+
+        .toggle-btn:hover {
+            background-color: #4b9df5;
+        }
+
+        .toggle-btn:first-child {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .toggle-btn:last-child {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .group-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .group-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .buttons-container button:hover {
+            background-color: #4b9df5;
+            color: white;
+        }
+
+        #Add_item {
+            font-size: 16px;
+            background-color: #4b9df5;
+            width: 250px;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            border-radius: 0 5px 5px 0;
+            cursor: not-allowed;
+            transition: background-color 0.3s ease;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #Add_item:disabled {
+            background-color: #a9ccf2;
+            cursor: not-allowed;
+        }
+
+        #Add_item:hover:enabled {
+            background-color: #4b9df5;
+
+        }
+
+        #Add_item:enabled {
+            font-size: 18px;
+            font-weight: 500;
+            background-color: #4b9df5;
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .task {
+            background-color: #ffffff;
+
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+            display: flex;
+            flex-direction: column;
+
+            justify-content: space-between;
+            align-items: center;
+            transition: box-shadow 0.3s ease;
+
+            text-align: left;
+
+        }
+
+        .task:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .strike-out {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .task-CreatedDate,
+        .task-completedAt,
+        .task-status,
+        .task-owner {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .task-buttons button {
+            background: none;
+            border: none;
+            color: #4b9df5;
+
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            margin-right: 50px;
+        }
+
+        .task-buttons button:hover {
+            color: #0056b3;
+
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            background-color: #5790cc;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 14px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background-color: #4b9df5;
+
+        }
+
+        .task-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff;
+
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        }
+
+        .task-table th {
+            background-color: #71aff1;
+
+            color: white;
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .task-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .task-table td:first-child {
+            font-weight: bold;
+        }
+
+        .task-table tr:hover {
+            background-color: #cce5ff;
+
+        }
+
+        .toggle-btn.selected {
+            background-image:url('C:\Users\Administrator\Desktop\Dummy\detail.png');
+            background-color: #4b9df5;
+
+            color: white;
+        }
+
+        .toggle-btn:hover {
+            background-color: #4b9df5;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <div class="input-container">
+            <div>
+                <label for="title" class="required">Title:</label>
+                <input type="text" id="title" placeholder="Add a New Task" maxlength="50" required>
+            </div>
+        </div>
+        <div class="input-container">
+            <label for="owner">Owner:</label>
+            <select id="owner">
+
+            </select>
+        </div>
+        <button id="Add_item" disabled>Add Task</button>
+        <div class="buttons-container">
+            <div class="group-left">
+                <button id="showAll" class="toggle-btn selected" data-filter="all">All</button>
+                <button id="showOpen" class="toggle-btn" data-filter="open">Open</button>
+                <button id="showClosed" class="toggle-btn" data-filter="closed">Closed</button>
+            </div>
+            <div class="group-right">
+                
+                <button id="DetailView" class="toggle-btn selected" data-view="detail">Detail View</button>
+                <button id="listView" class="toggle-btn" data-view="list">List View</button>
+            </div>
+        </div>
+        <div id="taskList"></div>
+        <div class="pagination" id="pagination">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+
+    </div>
+    <script>
+        let taskListObj = [];
+        let taskIdCounter = 2000;
+        const owners = ['Unassigned', 'Owner-1', 'Owner-2', 'Owner-3', 'Owner-4'];
+        const tasksPerPage = 5;
+        let currentPage = 1;
+        let listViewActive = false;
+        let currentFilter = 'all';
+        document.addEventListener('DOMContentLoaded', function () {
+            const titleInput = document.getElementById('title');
+            const addButton = document.getElementById('Add_item');
+            const taskListContainer = document.getElementById('taskList');
+            const paginationContainer = document.getElementById('pagination');
+            const showAllButton = document.getElementById('showAll');
+            const showOpenButton = document.getElementById('showOpen');
+            const showClosedButton = document.getElementById('showClosed');
+            const listViewButton = document.getElementById('listView');
+            const detailViewButton = document.getElementById('DetailView');
+            const ownerSelect = document.getElementById('owner');
+            addButton.disabled = true;
+            titleInput.addEventListener('input', function () {
+                addButton.disabled = titleInput.value.trim() === '';
+            });
+            showAllButton.addEventListener('click', function () {
+                currentFilter = 'all';
+                toggleButton(showAllButton, [showOpenButton, showClosedButton]);
+                applyFilter();
+            });
+            showOpenButton.addEventListener('click', function () {
+                currentFilter = 'Open';
+                toggleButton(showOpenButton, [showAllButton, showClosedButton]);
+                applyFilter();
+            });
+            showClosedButton.addEventListener('click', function () {
+                currentFilter = 'closed';
+                toggleButton(showClosedButton, [showAllButton, showOpenButton]);
+                applyFilter();
+            });
+            listViewButton.addEventListener('click', function () {
+                listViewActive = true;
+                toggleButton(listViewButton, [detailViewButton]);
+                renderView();
+            });
+            detailViewButton.addEventListener('click', function () {
+                listViewActive = false;
+                toggleButton(detailViewButton, [listViewButton]);
+                renderView();
+            });
+            owners.forEach(owner => {
+                const option = document.createElement('option');
+                option.value = owner;
+                option.textContent = owner;
+                ownerSelect.appendChild(option);
+            });
+            /*         
+                     const prevButton = document.getElementById('prevBtn');
+             const nextButton = document.getElementById('nextBtn');
+             prevButton.addEventListener('click', function () {
+                 if (currentPage > 1) {
+                     currentPage--;
+                     renderView();
+                 }
+             });
+             nextButton.addEventListener('click', function () {
+                 const totalTasks = filterTasks(taskListObj, currentFilter).length;
+                 const totalPages = Math.ceil(totalTasks / tasksPerPage);
+                 if (currentPage < totalPages) {
+                     currentPage++;
+                     renderView();
+                 }
+             });
+             */
+
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    taskListObj = data.TodoList;
+                    renderView();
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+        function toggleButton(selectedBtn, otherBtns) {
+            selectedBtn.classList.add('selected');
+            otherBtns.forEach(btn => btn.classList.remove('selected'));
+        }
+        function renderView() {
+            
+            if (listViewActive) {
+                renderListView();
+            } else {
+                applyFilter();
+            }
+        }
+        function applyFilter() {
+            const filteredTasks = filterTasks(taskListObj, currentFilter);
+            if (listViewActive) {
+                renderListView(filteredTasks);
+            } else {
+                displayEvents(filteredTasks, currentPage);
+            }
+        }
+        function filterTasks(tasks, filter) {
+            if (filter === 'all') {
+                return tasks;
+            } else if (filter === 'Open') {
+                return tasks.filter(task => task.status === 'Open');
+            } else if (filter === 'closed') {
+                return tasks.filter(task => task.status === 'Completed');
+            }
+            return tasks;
+        }
+        function renderListView(tasks = taskListObj) {
+            const taskListContainer = document.getElementById('taskList');
+            const paginationContainer = document.getElementById('pagination');
+            taskListContainer.innerHTML = '';
+            paginationContainer.innerHTML = '';
+            const table = document.createElement('table');
+            table.classList.add('task-table');
+            // Table headers
+            const headers = ['Title', 'Owner', 'Status'];
+            const headerRow = table.insertRow();
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            // Table rows
+            tasks.forEach(task => {
+                const row = table.insertRow();
+                row.innerHTML = `
+                    <td>${task.title}</td>
+                    <td>${task.ownerName}</td>
+                    <td>${task.status}</td>
+                `;
+                table.appendChild(row);
+            });
+            taskListContainer.appendChild(table);
+        }
+        function updateTaskStatus(taskId) {
+            for (let i = 0; i < taskListObj.length; i++) {
+                if (taskId === taskListObj[i].id) {
+                    if (taskListObj[i].status === 'Open') {
+                        taskListObj[i].status = 'Completed';
+                        taskListObj[i].completedAt = getCurrentDateTime();
+                    } else {
+                        taskListObj[i].status = 'Open';
+                    }
+                }
+            }
+            renderView();
+        }
+        function deleteTask(taskId) {
+            taskListObj = taskListObj.filter(task => task.id !== taskId);
+            renderView();
+        }
+        function displayEvents(tasks, page) {
+            const taskListContainer = document.getElementById('taskList');
+            const paginationContainer = document.getElementById('pagination');
+            taskListContainer.innerHTML = '';
+            const startIndex = (page - 1) * tasksPerPage;
+            const endIndex = startIndex + tasksPerPage;
+            const paginatedTasks = tasks.slice(startIndex, endIndex);
+            console.log(paginatedTasks);
+            paginatedTasks.forEach(task => {
+                const taskElement = document.createElement('div');
+                taskElement.classList.add('task');
+                taskElement.innerHTML = `
+                    <div class="task-title ${task.status === 'Completed' ? 'strike-out' : ''}">${task.title}</div>
+                    <div class="task-owner">Owner: ${task.ownerName}</div>
+                    <div class="task-CreatedDate">Added at: ${task.CreatedDate}</div>
+                    ${task.status !== 'Completed' ? `<div class="task-status">${task.status}</div>` : ''}
+                    ${task.status === 'Completed' ? `<div class="task-completedAt">Completed at: ${task.completedAt}</div>` : ''}
+                    <div class="task-buttons">
+                        <button onclick="updateTaskStatus(${task.id})">${task.status === 'Completed' ? 'Re-Open' : 'Complete'}</button>
+                        <button onclick="deleteTask(${task.id})">Delete</button>
+                    </div>
+                `;
+                taskListContainer.appendChild(taskElement);
+            });
+            showPagination(tasks.length);
+        }
+        function addEvent() {
+            const title = document.getElementById('title').value.trim();
+            const owner = document.getElementById('owner').value;
+            const currentDate = getCurrentDateTime();
+            const status = 'Open';
+            const newTask = {
+                id: taskIdCounter++,
+                title: title,
+                ownerName: owner,
+                CreatedDate: currentDate,
+                status: status,
+                completedAt: ''
+            };
+            taskListObj.unshift(newTask);
+            renderView();
+            document.getElementById('title').value = '';
+            document.getElementById('Add_item').disabled = true;
+            document.getElementById('owner').value = owners[0];
+        }
+        document.getElementById('Add_item').addEventListener('click', function () {
+            addEvent();
+        });
+        function showPagination(totalTasks) {
+            const totalPages = Math.ceil(totalTasks / tasksPerPage);
+            const paginationContainer = document.getElementById('pagination');
+            paginationContainer.innerHTML = '';
+            if (totalPages > 1) {
+                const prevButton = createPaginationButton('Prev', currentPage > 1 ? currentPage - 1 : 1);
+                pagination.appendChild(prevButton);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = createPaginationButton(i, i);
+                    pagination.appendChild(pageButton);
+
+                }
+                const nextButton = createPaginationButton('Next', currentPage < totalPages ? currentPage + 1 : totalPages);
+                pagination.appendChild(nextButton);
+            }
+        }
+        function createPaginationButton(text, page) {
+            const button = document.createElement('button');
+            button.textContent = text;
+            button.addEventListener('click', function () {
+                currentPage = page;
+                displayEvents(taskListObj, currentPage);
+            });
+            return button;
+        }
+        function getCurrentDateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString('en-US');
+            const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+            return `${date} ${time}`;
+        }
+    </script>
+</body>
+
+</html>
