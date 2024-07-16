@@ -1,181 +1,301 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Library book management</title>
     <style>
-        button
-        {
-            Width:200px;
-            Padding:15px;
-            font-size:20px;
-            margin:5px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 20px;
         }
+
+        h1 {
+            text-align: center;
+            color: #009933;
+            /* Green title */
+        }
+
+        #Buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 200px;
+            padding: 15px;
+            font-size: 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            /* Green buttons */
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            /* Darker green on hover */
+        }
+
         table {
             width: 80%;
             border-collapse: collapse;
-            margin-top: 20px;
-            
+            margin: 20px auto;
+            /* Center align table */
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Shadow for table */
         }
-        th, td {
-            border: 1px solid black;
+
+        th,
+        td {
+            border: 1px solid #dddddd;
             padding: 8px;
-            font-size:20px;
+            font-size: 18px;
             text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            /* Dark green headers */
+            color: white;
+        }
+
+        .highlight-add {
+            background-color: #ccffcc;
+            /* Light green background */
+            font-weight: bold;
+            /* Bold text */
+        }
+
+        .highlight-update {
+            background-color: #ccffcc;
+            /* Light green background */
+            font-weight: bold;
+            /* Bold text */
+        }
+
+        .highlight-find {
+            background-color: #ccffcc;
+            /* Light green background */
+            font-weight: bold;
+            /* Bold text */
+        }
+        .info-icon {
+            position: absolute;
+            top: 10px; 
+            right: 10px; 
+            background-color: #969595; 
+            color: #fff;
+            width: 30px; 
+            height: 30px; 
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 1000; 
+        }
+    
+        .info-icon:hover {
+            background-color: #7e7c7c; 
+        }
+    
+        .info-popup {
+            position: absolute;
+            top: 50px; 
+            right: 20px; 
+            background-color: #fff; 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            width: 300px; 
+            border-radius: 5px; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+            display: none;
+            z-index: 999; 
+            font-size: 14px;
+        }
+    
+        .info-popup p {
+            margin: 0;
+            line-height: 1.4; 
         }
     </style>
 </head>
+
 <body>
     <h1>Library Management</h1>
-<div id="Buttons">
-</div>
-<div id="bookDetailsDiv">
-</div>
-<script>
-    var Addbook_Button=document.createElement("button");
-    Addbook_Button.textContent="Add Book";
-    Addbook_Button.addEventListener("click",addBook);
-    Buttons.appendChild(Addbook_Button);
-    var Remove_Button=document.createElement("button");
-    Remove_Button.textContent="Remove Book";
-    Remove_Button.addEventListener("click",removeBook);
-    Buttons.appendChild(Remove_Button);
-    var Update_Button=document.createElement("button");
-    Update_Button.textContent="Update status";
-    Update_Button.addEventListener("click",updateBook);
-    Buttons.appendChild(Update_Button);
-    var FindBook_Button=document.createElement("button");
-    FindBook_Button.textContent="Find Book";
-    FindBook_Button.addEventListener("click",findBook);
-    Buttons.appendChild(FindBook_Button);
-    var Displaybook_Button=document.createElement("button");
-    Displaybook_Button.textContent="Display Book";
-    Displaybook_Button.addEventListener("click",displayBook);
-    Buttons.appendChild(Displaybook_Button);
-    var bookDetails=[];
-    var book1={title:"Alice in Wonderland",author:"Anna Sewell",pageCount:200,status:"Available"};
-    var book2={title:"Treasure Island",author:"RL Stevenson",pageCount:100,status:"Available"};
-    var book3={title:"Jungle Book",author:"Rudyard Kipling",pageCount:250,status:"Available"};
-    bookDetails.push(book1);
-    bookDetails.push(book2);
-    bookDetails.push(book3);
-    console.log(bookDetails);
-    function addBook()
-    {
-    var name=prompt("Enter the Book title");
-    var author=prompt("Enter the Author Name");
-    var page=prompt("Enter the Page Count");
-    if(name&&author&&page)
-    {
-    var book={title:name,author:author,pageCount:page,status:"Available"};
-    bookDetails.push(book);
-    console.log(bookDetails);
-    alert("Book added successfully");
-    }
-    else
-    {
-        alert("Enter Valid Details");
-    }
-    }
-    
-    function displayBook()
-    {
-        var booktable=document.createElement("table");
-        var tableHTML='<tr><th>Title</th><th>Author</th><th>Page Count</th><th>Availablity</th></tr>';
-            bookDetails.forEach(function(book) {
-                
+    <div id="Buttons"></div>
+    <div id="bookDetailsDiv"></div>
+    <div class="info-icon" onclick="toggleInfo()">i</div>
+    <div class="info-popup" id="infoPopup">
+        <p>
+            This Library Management System allows you to perform various operations on a collection of books:
+        </p>
+        <ul>
+            <li><strong>Add Book:</strong> Add a new book to the library.</li>
+            <li><strong>Remove Book:</strong> Remove a book from the library.</li>
+            <li><strong>Update Status:</strong> Update the availability status of a book.</li>
+            <li><strong>Find Book:</strong> Search for a book by its title.</li>
+            <li><strong>Display Books:</strong> Display all books currently in the library.</li>
+        </ul>
+        <p>
+            Please note, all functionality is implemented programmatically using JavaScript without direct inclusion in the HTML structure.
+        </p>
+    </div>
+    <script>
+        var Buttons = document.getElementById("Buttons");
+        var bookDetailsDiv = document.getElementById("bookDetailsDiv");
+        var Addbook_Button = document.createElement("button");
+        Addbook_Button.textContent = "Add Book";
+        Addbook_Button.addEventListener("click", addBook);
+        Buttons.appendChild(Addbook_Button);
+        var Remove_Button = document.createElement("button");
+        Remove_Button.textContent = "Remove Book";
+        Remove_Button.addEventListener("click", removeBook);
+        Buttons.appendChild(Remove_Button);
+        var Update_Button = document.createElement("button");
+        Update_Button.textContent = "Update status";
+        Update_Button.addEventListener("click", updateBook);
+        Buttons.appendChild(Update_Button);
+        var FindBook_Button = document.createElement("button");
+        FindBook_Button.textContent = "Find Book";
+        FindBook_Button.addEventListener("click", findBook);
+        Buttons.appendChild(FindBook_Button);
+        var Displaybook_Button = document.createElement("button");
+        Displaybook_Button.textContent = "Display Book";
+        Displaybook_Button.addEventListener("click", displayBook);
+        Buttons.appendChild(Displaybook_Button);
+        var bookDetails = [
+            { title: "Alice in Wonderland", author: "Anna Sewell", pageCount: 200, status: "Available" },
+            { title: "Treasure Island", author: "RL Stevenson", pageCount: 100, status: "Available" },
+            { title: "Jungle Book", author: "Rudyard Kipling", pageCount: 250, status: "Available" },
+            { title: "Where the Wild Things Are", author: "Maurice Sendak", pageCount: 200, status: "Available" },
+            { title: "Green Eggs and Ham", author: "Dr. Seuss", pageCount: 100, status: "Available" },
+            { title: "Goodnight Moon", author: "Margaret Wise Brown", pageCount: 250, status: "Available" }
+        ];
+        document.addEventListener('DOMContentLoaded', displayBook);
+        function addBook() {
+            var name = prompt("Enter the Book title");
+            var author = prompt("Enter the Author Name");
+            var page = prompt("Enter the Page Count");
+            if (name && author && page) {
+                var book = { title: name, author: author, pageCount: parseInt(page), status: "Available" };
+                bookDetails.push(book);
+                console.log(bookDetails);
+                alert("Book added successfully");
+                displayBook();
+                var rows = document.querySelectorAll("table tr");
+                rows.forEach(function (row) {
+                    row.classList.remove("highlight-add"); // Remove add highlight from all rows
+                });
+                rows[bookDetails.length].classList.add("highlight-add"); // Add add highlight to new row
+            } else {
+                alert("Enter Valid Details");
+            }
+        }
+        function displayBook() {
+            var booktable = document.createElement("table");
+            var tableHTML = '<tr><th>Title</th><th>Author</th><th>Page Count</th><th>Availability</th></tr>';
+            bookDetails.forEach(function (book) {
                 tableHTML += '<tr>';
-                 tableHTML+= '<td>'+'<input type="checkbox">'+ book.title + '</td>' +'<td>' + book.author + '</td>'+ '<td>' + book.pageCount + '</td>'+'<td>' + book.status + '</td>';
+                tableHTML += '<td>' + book.title + '</td>' + '<td>' + book.author + '</td>' + '<td>' + book.pageCount + '</td>' + '<td>' + book.status + '</td>';
                 tableHTML += '</tr>';
             });
-            bookDetailsDiv.innerHTML="";
-        booktable.innerHTML=tableHTML;
-        bookDetailsDiv.appendChild(booktable);
-    }
-    function removeBook()
-    {
-        var index=-1;
-        var title=prompt("Enter Book Title");
-        if(title)
-        {
-        for(var i=0;i<bookDetails.length;i++)
-        {
-            if(bookDetails[i].title.toLowerCase()===title.toLowerCase())
-            {
-            index=i;
-        break;
+            bookDetailsDiv.innerHTML = "";
+            booktable.innerHTML = tableHTML;
+            bookDetailsDiv.appendChild(booktable);
+        }
+        function removeBook() {
+            var title = prompt("Enter Book Title");
+            if (title) {
+                var index = -1;
+                for (var i = 0; i < bookDetails.length; i++) {
+                    if (bookDetails[i].title.toLowerCase() === title.toLowerCase()) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index !== -1) {
+                    bookDetails.splice(index, 1);
+                    console.log(bookDetails);
+                    alert("Book removed Successfully");
+                    displayBook();
+                } else {
+                    alert("Enter valid Book Details");
+                }
+            } else {
+                alert("Enter Valid Book Title");
             }
         }
-        if(index!=-1)
-        {
-            bookDetails.splice(i,1);
-            console.log(bookDetails);
-            alert("Book removed Successfully");
-        }
-        else
-        {
-            alert("Enter valid Book Details");
-        }
-        }
-    else{
-        alert("Enter Valid Book Title");
-    }
-    
-    }
-    function findBook()
-    {
-        var bookName=prompt("Enter Book Title");
-        if(bookName)
-        {
-        for(var i=0;i<bookDetails.length;i++)
-        {
-            if(bookDetails[i].title.toLowerCase()===bookName.toLowerCase())
-            {
-            index=i;
-        break;
+        function findBook() {
+            var bookName = prompt("Enter Book Title");
+            if (bookName) {
+                var found = false;
+                for (var i = 0; i < bookDetails.length; i++) {
+                    if (bookDetails[i].title.toLowerCase() === bookName.toLowerCase()) {
+                        var rows = document.querySelectorAll("table tr");
+                        rows.forEach(function (row) {
+                            row.classList.remove("highlight-find"); // Remove find highlight from all rows
+                        });
+                        rows[i + 1].classList.add("highlight-find"); // Add find highlight to matched row (i + 1 because of header row)
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    alert("Enter valid Book Details");
+                }
+            } else {
+                alert("Enter Valid Book Title");
             }
         }
-        if(index!=-1)
-        {
-            alert("Title: "+bookDetails[index].title +"\nAuthor: "+bookDetails[index].author+"\nPage Count: "+bookDetails[index].pageCount);
-        }
-        else
-        {
-            alert("Enter valid Book Details");
-        }
-        }
-    else{
-        alert("Enter Valid Book Title");
-    }
-}
-function updateBook()
-{
-    var bookName=prompt("Enter Book Title");
-    var status=prompt("Enter Status");
-        if(bookName&&status)
-        {
-        for(var i=0;i<bookDetails.length;i++)
-        {
-            if(bookDetails[i].title.toLowerCase()===bookName.toLowerCase())
-            {
-            index=i;
-        break;
+        function updateBook() {
+            var bookName = prompt("Enter Book Title");
+            var status = prompt("Enter Status");
+            if (bookName && status) {
+                var index = -1;
+                for (var i = 0; i < bookDetails.length; i++) {
+                    if (bookDetails[i].title.toLowerCase() === bookName.toLowerCase()) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index !== -1) {
+                    bookDetails[index].status = status;
+                    console.log(bookDetails);
+                    alert("Book Details updated successfully");
+                    displayBook();
+                    var rows = document.querySelectorAll("table tr");
+                    rows.forEach(function (row) {
+                        row.classList.remove("highlight-update"); 
+                    });
+                    rows[index + 1].classList.add("highlight-update"); 
+                } else {
+                    alert("Enter valid Book Details & status");
+                }
+            } else {
+                alert("Enter Valid Book Title and Status");
             }
         }
-        if(index!=-1)
-        {
-            bookDetails[i].status=status;
-            alert("Book Details updated successfully");
-        }
-        else
-        {
-            alert("Enter valid Book Details & status");
-        }
-        }
-    else{
-        alert("Enter Valid Book Title");
-    }
-}
-</script>
-</body>
-</html>
 
+        function toggleInfo() {
+            infoPopup.style.display = (infoPopup.style.display === 'block') ? 'none' : 'block';
+        }
+
+
+        document.addEventListener('click', function(event) {
+            var isClickInside = infoPopup.contains(event.target) || event.target.classList.contains('info-icon');
+            if (!isClickInside) {
+                infoPopup.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
