@@ -521,7 +521,6 @@
 
         function applyFilter() {
             const filteredTasks = filterTasks(taskListObj, currentFilter);
-            console.log("filtered Task", taskListObj)
             if (listViewActive) {
                 renderListView(filteredTasks);
             } else {
@@ -601,9 +600,6 @@
             window.scrollTo(0, 0);
         }
         function displayEvents(tasks, page) {
-            console.log("currentFilter", currentFilter);
-            console.log("listViewActive", listViewActive);
-
             const taskListContainer = document.getElementById('taskList');
             const paginationContainer = document.getElementById('pagination');
             taskListContainer.innerHTML = '';
@@ -612,7 +608,6 @@
             const paginatedTasks = tasks.slice(startIndex, endIndex);
 
             paginatedTasks.forEach(task => {
-                console.log(task);
                 const taskElement = document.createElement('div');
                 taskElement.classList.add('task');
                 taskElement.innerHTML = `
