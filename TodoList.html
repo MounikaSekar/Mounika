@@ -593,12 +593,15 @@
             window.scrollTo(0, 0);
         }
         function deleteTask(taskId) {
-            taskListObj = taskListObj.filter(task => task.id !== taskId);
-            showStatusMessage('Task deleted successfully....');
-            applyFilter();
-
-            window.scrollTo(0, 0);
-        }
+    if (confirm("Are you sure you want to delete this task?")) {
+        taskListObj = taskListObj.filter(task => task.id !== taskId);
+        showStatusMessage('Task deleted successfully.');
+        applyFilter();
+        window.scrollTo(0, 0);
+    } else {
+        return;
+    }
+}
         function displayEvents(tasks, page) {
             const taskListContainer = document.getElementById('taskList');
             const paginationContainer = document.getElementById('pagination');
@@ -657,12 +660,17 @@
                 pagination.appendChild(prevButton);
                 if (currentPage === 1) {
                     prevButton.disabled = true;
+                    
                 } else {
 
                     prevButton.disabled = false;
                 }
                 for (let i = 1; i <= totalPages; i++) {
                     const pageButton = createPaginationButton(i, i);
+                    if (i === currentPage) {
+                pageButton.classList.add('current');
+                pageButton.disabled = true;
+            }
                     pagination.appendChild(pageButton);
                 }
                 const nextButton = createPaginationButton('Next', currentPage < totalPages ? currentPage + 1 : totalPages);
